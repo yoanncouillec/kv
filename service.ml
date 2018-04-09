@@ -1,12 +1,10 @@
 type index = int
 type data = string
 
-type operation = 
+type message = 
   | Create of index * data
 
 let create_server port = 
-  (*let addr = (Unix.gethostbyname(Unix.gethostname())).Unix.h_addr_list.(0) in*)
-  (*let addr = Unix.gethostbyname "192.168.1.83" in*)
   let addr = Unix.inet_addr_any in
   let saddr = Unix.ADDR_INET(addr,port) in
   let socket = Unix.socket (Unix.domain_of_sockaddr saddr) Unix.SOCK_STREAM 0 in
