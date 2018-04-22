@@ -46,7 +46,7 @@ let treat kvds = function
                     (fun e -> e.min <= k && k < e.max)
                     kvds)
      in
-     print_endline ((string_of_int k) ^ " " ^ v) ;
+     (*print_endline ((string_of_int k) ^ " " ^ v) ;*)
      Service.send kvd.outc (Service.Create (k, v))
 
 let rec receive kvds inc =

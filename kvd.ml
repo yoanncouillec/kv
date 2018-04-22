@@ -11,8 +11,8 @@ let string_of_table table min max =
 
 let treat table = function
   | Service.Create (k,v) ->
-     Table.add table k v ;
-     Table.show table
+     Table.add table k v
+     (*Table.show table*)
 
 let rec receive table inc =
   let msg = Marshal.from_channel inc in
