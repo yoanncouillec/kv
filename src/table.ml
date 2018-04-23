@@ -9,8 +9,29 @@ type table =
 }
 
 type result =
-  | Nil
-  | Element of value
+  | Created of int
+  | NotCreated
+  | Read of int
+  | NotRead
+  | Updated of int
+  | NotUpdated
+  | Deleted of int
+  | NotDeleted
+
+type exists = 
+  | None of int
+  | One of int * int * value
+  | MoreThanOne of int
+
+let string_of_result = function
+  | Created k -> "Created "^(string_of_int k)
+  | NotCreated -> "Not created"
+  | Read k -> "Read "^(string_of_int k)
+  | NotRead -> "Not read"
+  | Updated n -> "Updated"
+  | NotUpdated -> "Not updated"
+  | Deleted n -> "Deleted"
+  | NotDeleted -> "Not deleted"
 
 let make size min max = 
   {
@@ -19,53 +40,51 @@ let make size min max =
     min = min;
     max = max
   }
-    
+
+let exists key table =     
+  let bucket_index = key / ((table.max - table.min) / table.size) in
+  match (List.filter
+           (fun (k,v) -> k == key)
+           (Hashtbl.find_all table.hashtbl bucket_index))
+  with
+  | [] -> None bucket_index
+  | (k,v)::[] -> One (bucket_index, k, v)
+  | _ -> MoreThanOne bucket_index
+
 let create table key value = 
   if key < table.min || table.max <= key then
-    failwith "Out of bounds"
+    NotCreated
   else
-    let bucket_index = (key - table.min) / ((table.max - table.min) / table.size) in
-    Hashtbl.add table.hashtbl bucket_index (key,value) ;
-    Nil
+    match exists key table with
+    | None bucket_index -> Hashtbl.add table.hashtbl bucket_index (key,value) ;
+                           Created key
+    | _ -> NotCreated
 
 let read table key = 
   if key < table.min || table.max <= key then
-    failwith "Out of bounds"
+    NotRead
   else
-    let bucket_index = key / ((table.max - table.min) / table.size) in
-    match (List.filter
-             (fun (k,v) -> k == key)
-             (Hashtbl.find_all table.hashtbl bucket_index))
-    with
-    | [] -> failwith "Not found"
-    | (k,v)::[] -> Element v
-    | _ -> failwith "too many values"
+    match exists key table with 
+    | One (bucket_index, k, v) -> Read k
+    | _ -> NotRead
 
 let update table key v = 
   if key < table.min || table.max <= key then
-    failwith "Out of bounds"
+    NotUpdated
   else
-    let bucket_index = key / ((table.max - table.min) / table.size) in
-    match (List.filter
-             (fun (k,v) -> k == key)
-             (Hashtbl.find_all table.hashtbl bucket_index))
-    with
-    | [] -> failwith "Not found"
-    | (k,v)::[] -> Hashtbl.replace table.hashtbl bucket_index (k,v) ; Nil
-    | _ -> failwith "too many values"
-
+    (match exists key table with 
+     | One (bucket_index, k, v) -> Hashtbl.replace table.hashtbl bucket_index (k,v) ; 
+                                   Updated k
+     | _ -> NotUpdated)
+             
 let delete table key = 
   if key < table.min || table.max <= key then
-    failwith "Out of bounds"
+    NotDeleted
   else
-    let bucket_index = key / ((table.max - table.min) / table.size) in
-    match (List.filter
-             (fun (k,v) -> k == key)
-             (Hashtbl.find_all table.hashtbl bucket_index))
-    with
-    | [] -> failwith "Not found"
-    | (k,v)::[] -> Hashtbl.remove table.hashtbl bucket_index ; Nil
-    | _ -> failwith "too many values"
+    match exists key table with 
+    | One (bucket_index,k,v) -> Hashtbl.remove table.hashtbl bucket_index ; 
+                   Deleted k
+    | _ -> NotDeleted
 
 let count table = 
   let rec count_aux table i =

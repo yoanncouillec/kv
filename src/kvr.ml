@@ -45,11 +45,17 @@ let get_kvd kvds k =
        (fun e -> e.min <= k && k < e.max)
        kvds)
 
-let treat kvds = function
-  | Service.Create (k,v) -> Service.send (get_kvd kvds k).outc (Service.Create (k, v))
-  | Service.Read k -> Service.send (get_kvd kvds k).outc (Service.Delete k)
-  | Service.Update (k,v) -> Service.send (get_kvd kvds k).outc (Service.Update (k, v))
-  | Service.Delete k -> Service.send (get_kvd kvds k).outc (Service.Delete k)
+let treat kvds operation = 
+  match operation with
+  | Service.Create (k,v) -> Service.send (get_kvd kvds k).outc (Service.Create (k, v)) ;
+                            Marshal.from_channel (get_kvd kvds k).inc
+  | Service.Read k -> Service.send (get_kvd kvds k).outc (Service.Read k) ;
+                      Marshal.from_channel (get_kvd kvds k).inc
+  | Service.Update (k,v) -> Service.send (get_kvd kvds k).outc (Service.Update (k, v)) ;
+                            Marshal.from_channel (get_kvd kvds k).inc
+  | Service.Delete k -> Service.send (get_kvd kvds k).outc (Service.Delete k) ;
+                          Marshal.from_channel (get_kvd kvds k).inc
+
 
 let rec receive kvds inc outc =
   let msg = Marshal.from_channel inc in

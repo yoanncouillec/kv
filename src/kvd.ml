@@ -1,5 +1,3 @@
-open Service
-
 let rec string_of_table_aux table min max i = 
   if i < max then
     ((if Hashtbl.mem table i then
@@ -13,7 +11,7 @@ let string_of_table table min max =
 
 let treat table = function
   | Service.Create (k,v) -> Table.create table k v
-  | Service.Read k -> Table.read table k
+  | Service.Read k -> let res = Table.read table k in print_endline (Table.string_of_result res) ; res
   | Service.Update (k,v) -> Table.update table k v
   | Service.Delete k -> Table.delete table k
 

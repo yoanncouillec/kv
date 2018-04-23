@@ -1,6 +1,10 @@
-let expr_of_filename filename = 
+let rec repl inc outc = 
+  print_string "> " ;
+  flush stdout ;
   let lexbuf = Lexing.from_channel stdin in
-  Parser.start Lexer.token lexbuf
+  Expr.eval outc (Parser.start Lexer.token lexbuf) ;
+  print_endline (Table.string_of_result (Marshal.from_channel inc)) ;
+  repl inc outc
 
 let main =
   let hostname = ref "127.0.0.1" in
@@ -12,5 +16,5 @@ let main =
     ] in
   Arg.parse options print_endline "Kv repl:" ;
   let inc, outc = Service.connect_to_server !hostname !port in
-  print_string "> " ;
+  repl inc outc
   
