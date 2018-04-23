@@ -3,6 +3,9 @@ type data = string
 
 type message = 
   | Create of index * data
+  | Read of index
+  | Update of index * data
+  | Delete of index
 
 let create_server port = 
   let addr = Unix.inet_addr_any in

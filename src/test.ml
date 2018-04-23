@@ -14,7 +14,7 @@ let rec insert outc number min max size =
     let k = min + (Random.int (max - min)) in
     let v = quick_rand_word size in
     (*print_endline ((string_of_int k) ^ " " ^ v) ;*)
-    Service.send outc (Service.Create (k, v)) ;
+    let _ = Service.send outc (Service.Create (k, v)) in
     insert outc (number - 1) min max size
            
 let main =

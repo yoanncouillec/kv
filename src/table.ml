@@ -1,12 +1,18 @@
+type value = string
+
 type table = 
 {
-  hashtbl : (int,int * string) Hashtbl.t;
+  hashtbl : (int,int * value) Hashtbl.t;
   size : int;
   min : int;
   max : int
 }
 
-let create size min max = 
+type result =
+  | Nil
+  | Element of value
+
+let make size min max = 
   {
     hashtbl = Hashtbl.create size;
     size = size;
@@ -14,14 +20,15 @@ let create size min max =
     max = max
   }
     
-let add table key value = 
+let create table key value = 
   if key < table.min || table.max <= key then
     failwith "Out of bounds"
   else
     let bucket_index = (key - table.min) / ((table.max - table.min) / table.size) in
-    Hashtbl.add table.hashtbl bucket_index (key,value)
+    Hashtbl.add table.hashtbl bucket_index (key,value) ;
+    Nil
 
-let get table key = 
+let read table key = 
   if key < table.min || table.max <= key then
     failwith "Out of bounds"
   else
@@ -31,7 +38,33 @@ let get table key =
              (Hashtbl.find_all table.hashtbl bucket_index))
     with
     | [] -> failwith "Not found"
-    | (k,v)::[] -> v
+    | (k,v)::[] -> Element v
+    | _ -> failwith "too many values"
+
+let update table key v = 
+  if key < table.min || table.max <= key then
+    failwith "Out of bounds"
+  else
+    let bucket_index = key / ((table.max - table.min) / table.size) in
+    match (List.filter
+             (fun (k,v) -> k == key)
+             (Hashtbl.find_all table.hashtbl bucket_index))
+    with
+    | [] -> failwith "Not found"
+    | (k,v)::[] -> Hashtbl.replace table.hashtbl bucket_index (k,v) ; Nil
+    | _ -> failwith "too many values"
+
+let delete table key = 
+  if key < table.min || table.max <= key then
+    failwith "Out of bounds"
+  else
+    let bucket_index = key / ((table.max - table.min) / table.size) in
+    match (List.filter
+             (fun (k,v) -> k == key)
+             (Hashtbl.find_all table.hashtbl bucket_index))
+    with
+    | [] -> failwith "Not found"
+    | (k,v)::[] -> Hashtbl.remove table.hashtbl bucket_index ; Nil
     | _ -> failwith "too many values"
 
 let count table = 
