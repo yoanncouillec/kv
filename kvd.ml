@@ -27,28 +27,6 @@ let rec accept server table =
     receive table inc 
   with End_of_file -> accept server table
 
-let find_conf id conf =
-    List.hd (List.filter (fun c -> (c |> member "id" |> to_string) = id) conf)
-
-type conf = {
-    id : string;
-    hostname : string;
-    port : int;
-    min : int;
-    max : int;
-    size : int;
-  }
-
-let make_conf jsconf = 
-  {
-    id = jsconf |> member "id" |> to_string;
-    hostname = jsconf |> member "hostname" |> to_string;
-    port = jsconf |> member "port" |> to_int;
-    min = jsconf |> member "min" |> to_int;
-    max = jsconf |> member "max" |> to_int;
-    size = jsconf |> member "size" |> to_int;
-  }
-
 let main = 
   let id = ref "kvd" in
   let conffile = ref "conf/conf.json" in
@@ -59,8 +37,8 @@ let main =
     ] in
   Arg.parse options (fun _ -> ()) "Options:";
   let all_conf = Yojson.Basic.from_channel (open_in !conffile) in
-  let jsconf = find_conf !id (all_conf |> member "kvd" |> to_list) in
-  let conf = make_conf jsconf in
+  let jsconf = Conf.find_conf_by_id !id (all_conf |> member "kvd" |> to_list) in
+  let conf = Conf.make_kvd_conf jsconf in
   let table = Table.create conf.size conf.min conf.max in
   let server = Service.create_server conf.port in
   accept server table
