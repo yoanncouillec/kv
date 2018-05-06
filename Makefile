@@ -15,9 +15,9 @@ test.out: table.cmx service.cmx test.cmx
 	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES)
 
 start:
-	./kvd.out --port 26000 --min 0 --max 1000 --size 100 > kvd1.log &
-	./kvd.out --port 26001 --min 1000 --max 2000 --size 100 > kvd2.log &
-	./kvr.out --port 26100 --conf kvr.json > kvr.log &
+	./kvd.out --id kvd1 &
+	./kvd.out --id kvd2 &
+	./kvr.out --port 26100 --conf conf/conf.json > kvr.log &
 
 kill:
 	killall kvd.out kvr.out

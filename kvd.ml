@@ -1,3 +1,5 @@
+open Yojson.Basic.Util
+
 let rec string_of_table_aux table min max i = 
   if i < max then
     ((if Hashtbl.mem table i then
@@ -25,21 +27,41 @@ let rec accept server table =
     receive table inc 
   with End_of_file -> accept server table
 
+let find_conf id conf =
+    List.hd (List.filter (fun c -> (c |> member "id" |> to_string) = id) conf)
+
+type conf = {
+    id : string;
+    hostname : string;
+    port : int;
+    min : int;
+    max : int;
+    size : int;
+  }
+
+let make_conf jsconf = 
+  {
+    id = jsconf |> member "id" |> to_string;
+    hostname = jsconf |> member "hostname" |> to_string;
+    port = jsconf |> member "port" |> to_int;
+    min = jsconf |> member "min" |> to_int;
+    max = jsconf |> member "max" |> to_int;
+    size = jsconf |> member "size" |> to_int;
+  }
+
 let main = 
-  let port = ref 26000 in
-  let min = ref 0 in
-  let max = ref 1000 in
-  let size = ref 100 in
+  let id = ref "kvd" in
+  let conffile = ref "conf/conf.json" in
   let options =
     [
-      ("--port", Arg.Set_int port, "port");
-      ("--min", Arg.Set_int min, "min");
-      ("--max", Arg.Set_int max, "max");
-      ("--size", Arg.Set_int size, "size");
-    (*("--conf", Arg.Set_string conf, "Configuration file");*)
+      ("--id", Arg.Set_string id, "id");
+      ("--conf", Arg.Set_string conffile, "Configuration file");
     ] in
   Arg.parse options (fun _ -> ()) "Options:";
-  let table = Table.create !size !min !max in
-  let server = Service.create_server !port in
+  let all_conf = Yojson.Basic.from_channel (open_in !conffile) in
+  let jsconf = find_conf !id (all_conf |> member "kvd" |> to_list) in
+  let conf = make_conf jsconf in
+  let table = Table.create conf.size conf.min conf.max in
+  let server = Service.create_server conf.port in
   accept server table
   
