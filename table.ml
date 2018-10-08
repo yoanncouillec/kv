@@ -49,24 +49,31 @@ let rec range a b =
   else
     a :: (range (a + 1) b)
 
-let rec string_of_bucket_content = function
-  | [] -> ""
-  | (k,v)::[] ->  "(" ^ (string_of_int k) ^ "," ^ v ^ ")"
-  | (k,v)::rest -> "(" ^ (string_of_int k) ^ "," ^ v ^ ")" ^ "," ^ (string_of_bucket_content rest)
+let rec string_of_bucket_content content verbose =
+    if verbose then
+      match content with
+      | [] -> ""
+      | (k,v)::[] ->  "(" ^ (string_of_int k) ^ "," ^ v ^ ")"
+      | (k,v)::rest -> "(" ^ (string_of_int k) ^ "," ^ v ^ ")" ^ "," ^ (string_of_bucket_content rest verbose)
+    else
+      ""
 
-let string_of_bucket table b = 
+let string_of_bucket table b verbose = 
   let content = Hashtbl.find_all table.hashtbl b in
+  let key = string_of_int b in
+  let count = List.length content in
   match content with
   | [] -> ""
-  | _ -> "[" ^ (string_of_int b) ^ "=>" ^ (string_of_int (List.length content)) ^ (string_of_bucket_content content) ^ "]"
-
-let string_of_table table = 
-  "{" ^ (string_of_int (count table)) ^ (List.fold_left 
-             (fun a b -> a ^ (string_of_bucket table b))
+  | _ ->
+     "'" ^ key ^ "':{'count':" ^ (string_of_int count) ^ "}"
+                                                        
+let string_of_table table verbose = 
+  "{'count':" ^ (string_of_int (count table)) ^ ",'content':{" ^ (List.fold_left 
+             (fun a b -> a ^ (string_of_bucket table b verbose))
              "" 
              (range 0 table.size)) ^ 
-    "}"
+    "}}"
       
-let show table = 
-  print_endline (string_of_table table) ;
+let show ?v:(verbose=false) table = 
+  print_endline (string_of_table table verbose) ;
   flush stdout

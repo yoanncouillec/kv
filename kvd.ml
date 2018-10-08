@@ -13,20 +13,21 @@ let string_of_table table min max =
 
 let treat table = function
   | Service.Create (k,v) ->
-     Table.add table k v
-     (*Table.show table*)
-
+     Table.add table k v ;
+     Table.show table
+               
 let rec receive table inc =
   let msg = Marshal.from_channel inc in
   treat table msg ; 
   receive table inc
-
+          
 let rec accept server table = 
   let inc, outc = Service.accept_client server in
   try
     receive table inc 
-  with End_of_file -> accept server table
-
+  with End_of_file -> 
+    accept server table
+           
 let main = 
   let id = ref "kvd" in
   let conffile = ref "conf/conf.json" in
@@ -36,6 +37,7 @@ let main =
       ("--conf", Arg.Set_string conffile, "Configuration file");
     ] in
   Arg.parse options (fun _ -> ()) "Options:";
+  print_endline ("Load configuration");
   let all_conf = Yojson.Basic.from_channel (open_in !conffile) in
   let jsconf = Conf.find_conf_by_id !id (all_conf |> member "kvd" |> to_list) in
   let conf = Conf.make_kvd_conf jsconf in

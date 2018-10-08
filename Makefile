@@ -14,7 +14,7 @@ test.out: table.cmx service.cmx test.cmx
 %.cmx:%.ml
 	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES)
 
-start:
+run:
 	./kvd.out --id kvd1 &
 	./kvd.out --id kvd2 &
 	./kvr.out --port 26100 --conf conf/conf.json > kvr.log &
