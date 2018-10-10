@@ -26,7 +26,7 @@ let kvds conf =
         inc  = inc;
         outc  = outc;
       })
-    (conf |> member "kvd" |> to_list)
+    conf
         
 let rec string_of_table_aux table min max i = 
   if i < max then
@@ -61,14 +61,18 @@ let rec accept server kvds =
   with End_of_file -> accept server kvds
 
 let main = 
-  let port = ref 26100 in
-  let conf = ref "kvr.json" in
+  let id = ref "kvr" in
+  let conffile = ref "conf/conf.json" in
   let options =
     [
-      ("--port", Arg.Set_int port, "port");
-      ("--conf", Arg.Set_string conf, "Configuration file");
+      ("--id", Arg.Set_string id, "id");
+      ("--conf", Arg.Set_string conffile, "Configuration file");
     ] in
   Arg.parse options (fun _ -> ()) "Options:";
-  let conf = Yojson.Basic.from_file !conf in
-  let server = Service.create_server !port in
-  accept server (kvds conf)
+  let all_conf = Yojson.Basic.from_file !conffile in
+  let jsconf = Conf.find_conf_by_id !id (all_conf |> member "kvr" |> to_list) in
+  let kvds_jsconf = all_conf |> member "kvd" |> to_list in
+  let conf = Conf.make_kvr_conf jsconf in
+  Log.init (open_out conf.logfile);
+  let server = Service.create_server conf.port in
+  accept server (kvds kvds_jsconf)

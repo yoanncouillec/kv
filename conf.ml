@@ -10,6 +10,12 @@ type kvd_conf = {
     logfile : string;
   }
 
+type kvr_conf = {
+    id : string;
+    port : int;
+    logfile : string;
+  }
+
 let find_conf_by_id id conf =
     List.hd (List.filter (fun c -> (c |> member "id" |> to_string) = id) conf)
 
@@ -24,3 +30,9 @@ let make_kvd_conf jsconf =
     logfile = jsconf |> member "logfile" |> to_string;
   }
 
+let make_kvr_conf jsconf = 
+  {
+    id = jsconf |> member "id" |> to_string;
+    port = jsconf |> member "port" |> to_int;
+    logfile = jsconf |> member "logfile" |> to_string;
+  }

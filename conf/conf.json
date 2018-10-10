@@ -17,4 +17,12 @@
 	"size": 100,
 	"logfile": "kvd2.log"
     }
-]}
+],
+ "kvr":[
+     {
+	 "id": "kvr",
+	 "port": 26100,
+	 "logfile": "kvr.log"
+     }
+ ]
+}
