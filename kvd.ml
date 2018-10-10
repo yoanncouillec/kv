@@ -37,10 +37,11 @@ let main =
       ("--conf", Arg.Set_string conffile, "Configuration file");
     ] in
   Arg.parse options (fun _ -> ()) "Options:";
-  print_endline ("Load configuration");
   let all_conf = Yojson.Basic.from_channel (open_in !conffile) in
   let jsconf = Conf.find_conf_by_id !id (all_conf |> member "kvd" |> to_list) in
   let conf = Conf.make_kvd_conf jsconf in
+  Log.init (open_out conf.logfile);
+  Log.info ("Load configuration");
   let table = Table.create conf.size conf.min conf.max in
   let server = Service.create_server conf.port in
   accept server table

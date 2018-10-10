@@ -7,6 +7,7 @@ type kvd_conf = {
     min : int;
     max : int;
     size : int;
+    logfile : string;
   }
 
 let find_conf_by_id id conf =
@@ -20,5 +21,6 @@ let make_kvd_conf jsconf =
     min = jsconf |> member "min" |> to_int;
     max = jsconf |> member "max" |> to_int;
     size = jsconf |> member "size" |> to_int;
+    logfile = jsconf |> member "logfile" |> to_string;
   }
 
