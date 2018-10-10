@@ -39,25 +39,42 @@ let rec string_of_table_aux table min max i =
 let string_of_table table min max = 
   "["^(string_of_table_aux table min max 0)^"]"
 
-let treat kvds = function
+let treat kvds msg =
+    Log.info ("kvr treat") ;
+    match msg with
   | Service.Create (k,v) ->
+     Log.info ("kvr treat create") ;
      let kvd = List.hd 
                  (List.filter
                     (fun e -> e.min <= k && k < e.max)
                     kvds)
      in
-     (*print_endline ((string_of_int k) ^ " " ^ v) ;*)
-     Service.send kvd.outc (Service.Create (k, v))
+     Service.send kvd.outc (Service.Create (k, v));
+     Service.receive kvd.inc
+  | Service.Read (k) ->
+     Log.info ("kvr treat read") ;
+     let kvd = List.hd 
+                 (List.filter
+                    (fun e -> e.min <= k && k < e.max)
+                    kvds)
+     in
+     Service.send kvd.outc (Service.Read (k));
+     Service.receive kvd.inc
 
-let rec receive kvds inc =
-  let msg = Marshal.from_channel inc in
-  treat kvds msg ; 
-  receive kvds inc
+let rec receive kvds client_inc client_outc =
+  Log.info ("kvr receive") ;
+  let msg = Marshal.from_channel client_inc in
+  let response = treat kvds msg in
+  Log.info ("kvr receive got response") ;
+  Log.info (Table.string_of_response response);
+  Service.send client_outc response ;
+  receive kvds client_inc client_outc
 
 let rec accept server kvds = 
-  let inc, outc = Service.accept_client server in
+  Log.info ("kvr accept") ;
+  let client_inc, client_outc = Service.accept_client server in
   try
-    receive kvds inc 
+    receive kvds client_inc client_outc ;
   with End_of_file -> accept server kvds
 
 let main = 

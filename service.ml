@@ -3,6 +3,7 @@ type data = string
 
 type message = 
   | Create of index * data
+  | Read of index
 
 let create_server port = 
   Log.info ("Create server");
@@ -30,4 +31,8 @@ let connect_to_server hostname port =
 let send outc msg =
   Marshal.to_channel outc msg [] ;
   flush outc
+
+let receive inc =
+  Marshal.from_channel inc;
+
 

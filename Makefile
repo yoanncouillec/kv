@@ -1,6 +1,6 @@
 PACKAGES=unix,yojson
 
-all: kvd.out kvr.out test.out
+all: kvd.out kvr.out test.out test_find.out
 
 kvd.out: log.cmx table.cmx service.cmx conf.cmx kvd.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^	
@@ -10,6 +10,10 @@ kvr.out: log.cmx table.cmx service.cmx conf.cmx kvr.cmx
 
 test.out: log.cmx table.cmx service.cmx test.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^
+
+test_find.out: log.cmx table.cmx service.cmx test_find.cmx
+	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^
+
 
 %.cmx:%.ml
 	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES)

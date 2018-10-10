@@ -14,12 +14,21 @@ let create size min max =
     max = max
   }
     
+type response = 
+  | None
+  | Value of string
+
+let string_of_response = function
+  | None -> "None"
+  | Value v -> v
+
 let add table key value = 
   if key < table.min || table.max <= key then
     failwith "Out of bounds"
   else
     let bucket_index = (key - table.min) / ((table.max - table.min) / table.size) in
-    Hashtbl.add table.hashtbl bucket_index (key,value)
+    Hashtbl.add table.hashtbl bucket_index (key,value) ;
+    None
 
 let get table key = 
   if key < table.min || table.max <= key then
@@ -30,9 +39,9 @@ let get table key =
              (fun (k,v) -> k == key)
              (Hashtbl.find_all table.hashtbl bucket_index))
     with
-    | [] -> failwith "Not found"
-    | (k,v)::[] -> v
-    | _ -> failwith "too many values"
+    | [] -> None (*failwith "Not found"*)
+    | (k,v)::[] -> Value v
+    | _ -> None (*failwith "too many values"*)
 
 let count table = 
   let rec count_aux table i =
@@ -73,7 +82,10 @@ let string_of_table table verbose =
              "" 
              (range 0 table.size)) ^ 
     "}}"
+
+let string_of_table_min table verbose = 
+  "{'count':" ^ (string_of_int (count table)) ^ "}"
       
-let show ?v:(verbose=false) table = 
-  print_endline (string_of_table table verbose) ;
+let show ?v:(verbose=true) table = 
+  Log.info (string_of_table table verbose) ;
   flush stdout

@@ -13,18 +13,20 @@ let string_of_table table min max =
 
 let treat table = function
   | Service.Create (k,v) ->
-     Table.add table k v ;
-     Table.show table
+     Table.add table k v
+  | Service.Read (k) ->
+     Table.get table k
                
-let rec receive table inc =
-  let msg = Marshal.from_channel inc in
-  treat table msg ; 
-  receive table inc
+let rec receive table client_inc client_outc =
+  let msg = Marshal.from_channel client_inc in
+  Service.send client_outc (treat table msg) ; 
+  Table.show table ;
+  receive table client_inc client_outc
           
 let rec accept server table = 
-  let inc, outc = Service.accept_client server in
+  let client_inc, client_outc = Service.accept_client server in
   try
-    receive table inc 
+    receive table client_inc client_outc 
   with End_of_file -> 
     accept server table
            

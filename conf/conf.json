@@ -2,19 +2,19 @@
     {
 	"id": "kvd1",
 	"hostname": "127.0.0.1",
-	"port": 26000,
+	"port": 26010,
 	"min": 0,
 	"max": 1000,
-	"size": 100,
+	"size": 1000,
 	"logfile": "kvd1.log"
     },
     {
 	"id": "kvd2",
 	"hostname": "127.0.0.1",
-	"port": 26001,
+	"port": 26011,
 	"min": 1000,
 	"max": 2000,
-	"size": 100,
+	"size": 1000,
 	"logfile": "kvd2.log"
     }
 ],
