@@ -44,13 +44,20 @@ let treat kvds msg =
     match msg with
   | Service.Create (k,v) ->
      Log.info ("kvr treat create") ;
-     let kvd = List.hd 
-                 (List.filter
-                    (fun e -> e.min <= k && k < e.max)
-                    kvds)
-     in
-     Service.send kvd.outc (Service.Create (k, v));
-     Service.receive kvd.inc
+       (try
+          let kvd = 
+            List.hd 
+              (List.filter
+                 (fun e -> e.min <= k && k < e.max)
+                 kvds)
+          in
+          Service.send kvd.outc (Service.Create (k, v));
+          Service.receive kvd.inc
+        with
+        | Failure m ->
+           let msg = "kvr: key ("^(string_of_int k)^") is out of bounds" in
+           Log.error msg ;
+           Table.Fail (msg))
   | Service.Read (k) ->
      Log.info ("kvr treat read") ;
      let kvd = List.hd 

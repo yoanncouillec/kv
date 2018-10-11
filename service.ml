@@ -5,6 +5,10 @@ type message =
   | Create of index * data
   | Read of index
 
+let string_of_message = function
+  | Create (k,v) -> "Create("^(string_of_int k)^","^v^")"
+  | Read (k) -> "Read("^(string_of_int k)^")"
+
 let create_server port = 
   Log.info ("Create server");
   let addr = Unix.inet_addr_any in

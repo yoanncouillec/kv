@@ -26,8 +26,17 @@ run:
 kill:
 	killall kvd.out kvr.out
 
-test:
+insert:
 	./test.out
+
+biginsert:
+	./test.out --number 10000
+
+find:
+	./test_find.out
+
+bigfind:
+	./test_find.out --number 10000
 
 clean:
 	rm -rf *.out *.cm* *.o *~ _build *.log

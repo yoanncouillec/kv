@@ -11,3 +11,7 @@ let string_of_time tm =
 let info m = 
   output_string !cout ("["^(string_of_time (Unix.gettimeofday()))^"]"^"[INFO]" ^ m ^ "\n");
   flush !cout
+
+let error m = 
+  output_string !cout ("["^(string_of_time (Unix.gettimeofday()))^"]"^"[ERROR]" ^ m ^ "\n");
+  flush !cout

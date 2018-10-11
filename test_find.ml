@@ -1,15 +1,16 @@
 let rec find kvr_inc kvr_outc number min max = 
   if number > 0 then
-    let k = 653 in(*min + (Random.int (max - min)) in*)
-    Service.send kvr_outc (Service.Read (k)) ;
-    print_endline("Waiting to receive") ;
-    print_endline (Table.string_of_response (Service.receive kvr_inc));
+    let k = min + (Random.int (max - min)) in
+    let msg = Service.Read (k) in
+    Service.send kvr_outc msg ;
+    print_endline ((Service.string_of_message msg) ^
+                     " => "^Table.string_of_response (Service.receive kvr_inc));
     find kvr_inc kvr_outc (number - 1) min max
            
 let main =
   let hostname = ref "127.0.0.1" in
   let port = ref 26100 in
-  let number = ref 2 in
+  let number = ref 100 in
   let min = ref 0 in
   let max = ref 2000 in
   let options =

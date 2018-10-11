@@ -15,12 +15,18 @@ let create size min max =
   }
     
 type response = 
-  | None
-  | Value of string
+  | Inserted of int
+  | Found of string
+  | FoundMany of int
+  | NotFound of int
+  | Fail of string
 
 let string_of_response = function
-  | None -> "None"
-  | Value v -> v
+  | Inserted b -> "Inserted("^(string_of_int b)^")"
+  | Found v -> "Found("^v^")"
+  | FoundMany n -> "FoundMany("^(string_of_int n)^")"
+  | NotFound k -> "NotFound("^(string_of_int k)^")"
+  | Fail msg -> "Fail:"^msg
 
 let add table key value = 
   if key < table.min || table.max <= key then
@@ -28,7 +34,7 @@ let add table key value =
   else
     let bucket_index = (key - table.min) / ((table.max - table.min) / table.size) in
     Hashtbl.add table.hashtbl bucket_index (key,value) ;
-    None
+    Inserted(bucket_index)
 
 let get table key = 
   if key < table.min || table.max <= key then
@@ -39,9 +45,9 @@ let get table key =
              (fun (k,v) -> k == key)
              (Hashtbl.find_all table.hashtbl bucket_index))
     with
-    | [] -> None (*failwith "Not found"*)
-    | (k,v)::[] -> Value v
-    | _ -> None (*failwith "too many values"*)
+    | [] -> NotFound(key)
+    | (k,v)::[] -> Found v
+    | _ as l -> FoundMany (List.length l)
 
 let count table = 
   let rec count_aux table i =
@@ -74,10 +80,23 @@ let string_of_bucket table b verbose =
   match content with
   | [] -> ""
   | _ ->
-     "'" ^ key ^ "':{'count':" ^ (string_of_int count) ^ "}"
+     "'" ^ key ^ "':{'count':" ^ (string_of_int count) ^ "}\n"
+
+let rec visual_string_of_int = function
+  | 0 -> ""
+  | n -> "|" ^ (visual_string_of_int (n-1))
+
+let string_of_bucket table b verbose = 
+  let content = Hashtbl.find_all table.hashtbl b in
+  let key = string_of_int b in
+  let count = List.length content in
+  match content with
+  | [] -> ""
+  | _ ->
+     "'" ^ key ^ "':{'count':'" ^ (visual_string_of_int count) ^ "'}\n"
                                                         
 let string_of_table table verbose = 
-  "{'count':" ^ (string_of_int (count table)) ^ ",'content':{" ^ (List.fold_left 
+  "{'count':" ^ (string_of_int (count table)) ^ ",'content':{\n" ^ (List.fold_left 
              (fun a b -> a ^ (string_of_bucket table b verbose))
              "" 
              (range 0 table.size)) ^ 

@@ -13,9 +13,10 @@ let rec insert kvr_inc kvr_outc number min max size =
   if number > 0 then
     let k = min + (Random.int (max - min)) in
     let v = quick_rand_word size in
-    Service.send kvr_outc (Service.Create (k, v)) ;
-    print_endline("Waiting to receive") ;
-    print_endline (Table.string_of_response (Service.receive kvr_inc));
+    let msg = Service.Create (k, v) in
+    Service.send kvr_outc msg ;
+    print_endline ((Service.string_of_message msg) ^
+                     " => "^Table.string_of_response (Service.receive kvr_inc));
     insert kvr_inc kvr_outc (number - 1) min max size
            
 let rec insert_regular kvr_inc kvr_outc number min max size = 
@@ -23,17 +24,16 @@ let rec insert_regular kvr_inc kvr_outc number min max size =
     let k = number in
     let v = quick_rand_word size in
     Service.send kvr_outc (Service.Create (k, v)) ;
-    print_endline("Waiting to receive") ;
     print_endline (Table.string_of_response (Service.receive kvr_inc));
     insert kvr_inc kvr_outc (number - 1) min max size
            
 let main =
   let hostname = ref "127.0.0.1" in
   let port = ref 26100 in
-  let number = ref 3 in
+  let number = ref 100 in
   let min = ref 0 in
   let max = ref 2000 in
-  let size = ref 100000 in
+  let size = ref 10 in
   let options =
     [
       ("--size", Arg.Set_int size, "Size of each document");
@@ -48,7 +48,7 @@ let main =
   Random.self_init() ;
   print_endline("Test[size="^(string_of_int !size)^",number="^(string_of_int !number)^",min="^(string_of_int !min)^",max="^(string_of_int !max)^",host="^(!hostname)^",port="^(string_of_int !port)^"]");
   let start = Unix.gettimeofday() in
-  insert_regular inc outc !number !min !max !size ;
+  insert inc outc !number !min !max !size ;
   let stop = Unix.gettimeofday() in
   let total = stop -. start in
   let tps = (float_of_int !number) /. total in
