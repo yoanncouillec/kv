@@ -21,8 +21,16 @@
  "kvr":[
      {
 	 "id": "kvr",
+	 "hostname": "127.0.0.1",
 	 "port": 26100,
 	 "logfile": "kvr.log"
+     }
+ ],
+ "kvc":[
+     {
+	 "id": "kvc",
+	 "kvr_id": "kvr",
+	 "logfile": "kvc.log"
      }
  ]
 }

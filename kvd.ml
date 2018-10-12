@@ -16,6 +16,8 @@ let treat table = function
      Table.add table k v
   | Service.Read (k) ->
      Table.get table k
+  | Service.Count ->
+     Table.count table
                
 let rec receive table client_inc client_outc =
   let msg = Marshal.from_channel client_inc in

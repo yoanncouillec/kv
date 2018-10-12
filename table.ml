@@ -20,6 +20,7 @@ type response =
   | FoundMany of int
   | NotFound of int
   | Fail of string
+  | Count of int
 
 let string_of_response = function
   | Inserted b -> "Inserted("^(string_of_int b)^")"
@@ -27,6 +28,7 @@ let string_of_response = function
   | FoundMany n -> "FoundMany("^(string_of_int n)^")"
   | NotFound k -> "NotFound("^(string_of_int k)^")"
   | Fail msg -> "Fail:"^msg
+  | Count n -> "Count("^(string_of_int n)^")"
 
 let add table key value = 
   if key < table.min || table.max <= key then
@@ -49,7 +51,7 @@ let get table key =
     | (k,v)::[] -> Found v
     | _ as l -> FoundMany (List.length l)
 
-let count table = 
+let raw_count table = 
   let rec count_aux table i =
     if i < table.size then
       (List.length (Hashtbl.find_all table.hashtbl i)) + (count_aux table (i + 1))
@@ -57,6 +59,9 @@ let count table =
       0
   in
   count_aux table 0
+
+let count table = 
+  Count(raw_count table)
       
 let rec range a b =
   if a == b then
@@ -96,14 +101,14 @@ let string_of_bucket table b verbose =
      "'" ^ key ^ "':{'count':'" ^ (visual_string_of_int count) ^ "'}\n"
                                                         
 let string_of_table table verbose = 
-  "{'count':" ^ (string_of_int (count table)) ^ ",'content':{\n" ^ (List.fold_left 
+  "{'count':" ^ (string_of_int (raw_count table)) ^ ",'content':{\n" ^ (List.fold_left 
              (fun a b -> a ^ (string_of_bucket table b verbose))
              "" 
              (range 0 table.size)) ^ 
     "}}"
 
 let string_of_table_min table verbose = 
-  "{'count':" ^ (string_of_int (count table)) ^ "}"
+  "{'count':" ^ (string_of_int (raw_count table)) ^ "}"
       
 let show ?v:(verbose=true) table = 
   Log.info (string_of_table table verbose) ;

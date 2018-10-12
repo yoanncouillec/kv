@@ -67,6 +67,17 @@ let treat kvds msg =
      in
      Service.send kvd.outc (Service.Read (k));
      Service.receive kvd.inc
+  | Service.Count ->
+     Log.info ("kvr treat read") ;
+     let total = 
+       List.fold_left 
+         (fun a kvd ->
+           Service.send kvd.outc (Service.Count) ;
+           match Service.receive kvd.inc with
+           | Table.Count n -> a + n
+           | _ -> failwith "expected count response")
+         0 kvds in
+     Table.Count total
 
 let rec receive kvds client_inc client_outc =
   Log.info ("kvr receive") ;

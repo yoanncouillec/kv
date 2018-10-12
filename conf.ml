@@ -12,7 +12,14 @@ type kvd_conf = {
 
 type kvr_conf = {
     id : string;
+    hostname : string;
     port : int;
+    logfile : string;
+  }
+
+type kvc_conf = {
+    id : string;
+    kvr_id : string;
     logfile : string;
   }
 
@@ -33,6 +40,14 @@ let make_kvd_conf jsconf =
 let make_kvr_conf jsconf = 
   {
     id = jsconf |> member "id" |> to_string;
+    hostname = jsconf |> member "hostname" |> to_string;
     port = jsconf |> member "port" |> to_int;
+    logfile = jsconf |> member "logfile" |> to_string;
+  }
+
+let make_kvc_conf jsconf = 
+  {
+    id = jsconf |> member "id" |> to_string;
+    kvr_id = jsconf |> member "kvr_id" |> to_string;
     logfile = jsconf |> member "logfile" |> to_string;
   }
