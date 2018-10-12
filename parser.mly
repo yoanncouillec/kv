@@ -1,7 +1,7 @@
 %token<int> ER_INT
 %token<string> ER_STRING
 %token LPAREN RPAREN COMMA EOF
-%token INSERT SELECT COUNT
+%token INSERT SELECT COUNT DROP
 %start start
 %type <Sql.sqlexpr> start
 
@@ -16,3 +16,4 @@ expression:
 	 }
 | SELECT ER_INT { Sql.Select $2 }
 | COUNT { Sql.Count }
+| DROP { Sql.Drop }

@@ -20,7 +20,7 @@ let rec repl inc outc =
     print_string "> " ;
     let line = read_line () in
     let expr = expr_of_string line in
-    print_endline (Sql.string_of_sqlexpr expr);
+    (*print_endline (Sql.string_of_sqlexpr expr);*)
     Service.send outc expr ;
     let response = Service.receive inc in
     print_endline (Table.string_of_response response) ;

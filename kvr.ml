@@ -40,10 +40,10 @@ let string_of_table table min max =
   "["^(string_of_table_aux table min max 0)^"]"
 
 let treat kvds msg =
-    Log.info ("kvr treat") ;
+    Log.nil ("kvr treat") ;
     match msg with
   | Service.Create (k,v) ->
-     Log.info ("kvr treat create") ;
+     Log.nil ("kvr treat create") ;
        (try
           let kvd = 
             List.hd 
@@ -59,7 +59,7 @@ let treat kvds msg =
            Log.error msg ;
            Table.Fail (msg))
   | Service.Read (k) ->
-     Log.info ("kvr treat read") ;
+     Log.nil ("kvr treat read") ;
      let kvd = List.hd 
                  (List.filter
                     (fun e -> e.min <= k && k < e.max)
@@ -68,7 +68,7 @@ let treat kvds msg =
      Service.send kvd.outc (Service.Read (k));
      Service.receive kvd.inc
   | Service.Count ->
-     Log.info ("kvr treat read") ;
+     Log.nil ("kvr treat count") ;
      let total = 
        List.fold_left 
          (fun a kvd ->
@@ -78,13 +78,24 @@ let treat kvds msg =
            | _ -> failwith "expected count response")
          0 kvds in
      Table.Count total
+  | Service.Drop ->
+     Log.nil ("kvr treat drop") ;
+     let total = 
+       List.fold_left 
+         (fun a kvd ->
+           Service.send kvd.outc (Service.Drop) ;
+           match Service.receive kvd.inc with
+           | Table.Count n -> a + n
+           | _ -> failwith "expected count response")
+         0 kvds in
+     Table.Count total
 
 let rec receive kvds client_inc client_outc =
-  Log.info ("kvr receive") ;
+  Log.nil ("kvr receive") ;
   let msg = Marshal.from_channel client_inc in
   let response = treat kvds msg in
-  Log.info ("kvr receive got response") ;
-  Log.info (Table.string_of_response response);
+  Log.nil ("kvr receive got response") ;
+  Log.nil (Table.string_of_response response);
   Service.send client_outc response ;
   receive kvds client_inc client_outc
 

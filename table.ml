@@ -62,6 +62,10 @@ let raw_count table =
 
 let count table = 
   Count(raw_count table)
+
+let drop table = 
+  Hashtbl.clear table.hashtbl ;
+  count table
       
 let rec range a b =
   if a == b then
@@ -111,5 +115,5 @@ let string_of_table_min table verbose =
   "{'count':" ^ (string_of_int (raw_count table)) ^ "}"
       
 let show ?v:(verbose=true) table = 
-  Log.info (string_of_table table verbose) ;
+  Log.nil (string_of_table table verbose) ;
   flush stdout

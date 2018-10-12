@@ -15,3 +15,5 @@ let info m =
 let error m = 
   output_string !cout ("["^(string_of_time (Unix.gettimeofday()))^"]"^"[ERROR]" ^ m ^ "\n");
   flush !cout
+
+let nil m = ()

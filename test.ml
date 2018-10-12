@@ -15,7 +15,7 @@ let rec insert kvr_inc kvr_outc number min max size =
     let v = quick_rand_word size in
     let msg = Service.Create (k, v) in
     Service.send kvr_outc msg ;
-    print_endline ((Service.string_of_message msg) ^
+    Log.nil ((Service.string_of_message msg) ^
                      " => "^Table.string_of_response (Service.receive kvr_inc));
     insert kvr_inc kvr_outc (number - 1) min max size
            
@@ -24,7 +24,7 @@ let rec insert_regular kvr_inc kvr_outc number min max size =
     let k = number in
     let v = quick_rand_word size in
     Service.send kvr_outc (Service.Create (k, v)) ;
-    print_endline (Table.string_of_response (Service.receive kvr_inc));
+    Log.info (Table.string_of_response (Service.receive kvr_inc));
     insert kvr_inc kvr_outc (number - 1) min max size
            
 let main =
@@ -33,7 +33,8 @@ let main =
   let number = ref 100 in
   let min = ref 0 in
   let max = ref 2000 in
-  let size = ref 10 in
+  let size = ref 1024 in
+  let logfile = ref "test_insert.log" in
   let options =
     [
       ("--size", Arg.Set_int size, "Size of each document");
@@ -42,10 +43,12 @@ let main =
       ("--max", Arg.Set_int max, "max");
       ("--host", Arg.Set_string hostname, "Hostname of the server");
       ("--port", Arg.Set_int port, "Port of the server");
+      ("--logfile", Arg.Set_string logfile, "Logfile");
     ] in
   Arg.parse options print_endline "Chat client:" ;
   let inc, outc = Service.connect_to_server !hostname !port in
   Random.self_init() ;
+  Log.init (open_out !logfile);
   print_endline("Test[size="^(string_of_int !size)^",number="^(string_of_int !number)^",min="^(string_of_int !min)^",max="^(string_of_int !max)^",host="^(!hostname)^",port="^(string_of_int !port)^"]");
   let start = Unix.gettimeofday() in
   insert inc outc !number !min !max !size ;

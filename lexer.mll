@@ -10,6 +10,7 @@ rule token = parse
   | "INSERT" { INSERT }
   | "SELECT" { SELECT }
   | "COUNT" { COUNT }
+  | "DROP" { DROP }
   | '\"' (('\\' _) | [^'\"'])* '\"' { ER_STRING (Lexing.lexeme lexbuf) }
   | ['0'-'9']+ { ER_INT (int_of_string (Lexing.lexeme lexbuf)) }
 

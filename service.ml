@@ -5,11 +5,19 @@ type message =
   | Create of index * data
   | Read of index
   | Count
+  | Drop
+
+let rec string_of_value n v = 
+  if String.length v > n then
+    (String.sub v 0 n) ^ "..."
+  else
+    v
 
 let string_of_message = function
-  | Create (k,v) -> "Create("^(string_of_int k)^","^v^")"
+  | Create (k,v) -> "Create("^(string_of_int k)^","^(string_of_value 10 v)^")"
   | Read (k) -> "Read("^(string_of_int k)^")"
   | Count -> "Count"
+  | Drop -> "Drop"
 
 let create_server port = 
   Log.info ("Create server");
@@ -35,13 +43,13 @@ let connect_to_server hostname port =
   (Unix.in_channel_of_descr socket, Unix.out_channel_of_descr socket)
 
 let send outc msg =
-  Log.info ("Send message");
+  Log.nil ("Send message");
   Marshal.to_channel outc msg [] ;
   flush outc
 
 let receive inc =
   let msg = Marshal.from_channel inc in
-  Log.info ("Receive message");
+  Log.nil ("Receive message");
   msg
 
 

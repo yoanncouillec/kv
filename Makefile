@@ -50,6 +50,9 @@ insert:
 biginsert:
 	./test.out --number 10000
 
+verybiginsert:
+	./test.out --number 1000000
+
 find:
 	./test_find.out
 

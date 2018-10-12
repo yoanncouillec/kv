@@ -18,11 +18,13 @@ let treat table = function
      Table.get table k
   | Service.Count ->
      Table.count table
+  | Service.Drop ->
+     Table.drop table
                
 let rec receive table client_inc client_outc =
   let msg = Marshal.from_channel client_inc in
   Service.send client_outc (treat table msg) ; 
-  Table.show table ;
+  (*Table.show table ;*)
   receive table client_inc client_outc
           
 let rec accept server table = 
