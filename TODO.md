@@ -1,20 +1,20 @@
-- kvc [x]
-- CRUD 
-  - Create [x]
-  - Read [x]
-  - Update [ ]
-  - Delete [ ]
-- Operations
-  - Drop [x]
-  - Unique constraint [ ]
-  - Count table [x]
-  - Count for one index [x]
-  - Bulk [ ]
-- Database admin.
-  - Manage several tables [ ]
-  - Manage several database [ ]
-  - Create database [ ]
-  - Drop database [ ]
-  - Create table [ ]
-  - Drop table [ ]
-- directories
+- [x] kvc
+- [ ] CRUD 
+  - [x] Create
+  - [x] Read
+  - [ ] Update 
+  - [ ] Delete 
+- [ ] Operations
+  - [x] Drop
+  - [ ] Unique constraint 
+  - [x] Count table
+  - [x] Count for one index
+  - [ ] Bulk
+- [ ] Database admin.
+  - [ ] Manage several tables 
+  - [ ] Manage several database 
+  - [ ] Create database 
+  - [ ] Drop database 
+  - [ ] Create table 
+  - [ ] Drop table 
+- [ ] directories
