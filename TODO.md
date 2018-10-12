@@ -17,4 +17,12 @@
   - [ ] Drop database 
   - [ ] Create table 
   - [ ] Drop table 
+- [ ] Security
+  - [ ] Authentication
+  - [ ] SSL
+- [ ] Persistence
+  - Persistence agent
+
 - [ ] directories
+- [ ] API
+  - Should expose REST API call while calling corresponding functions
