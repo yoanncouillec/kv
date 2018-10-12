@@ -1,6 +1,9 @@
 PACKAGES=unix,yojson
 
-all: kvd.out kvr.out test.out test_find.out
+all: kvc.out kvd.out kvr.out test.out test_find.out
+
+kvc.out: sql.cmx parser.cmx lexer.cmx log.cmx table.cmx service.cmx conf.cmx kvc.cmx
+	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^	
 
 kvd.out: log.cmx table.cmx service.cmx conf.cmx kvd.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^	
@@ -14,8 +17,23 @@ test.out: log.cmx table.cmx service.cmx test.cmx
 test_find.out: log.cmx table.cmx service.cmx test_find.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^
 
+lexer.cmx: lexer.ml
+
+parse.cmx: parser.ml
+
+parser.ml: parser.mly parser.cmi
+	ocamlyacc $<
+
+parser.mli: parser.mly
+	ocamlyacc $^
+
+lexer.ml: lexer.mll
+	ocamllex $^
 
 %.cmx:%.ml
+	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES)
+
+%.cmi: %.mli
 	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES)
 
 run:
@@ -39,4 +57,4 @@ bigfind:
 	./test_find.out --number 10000
 
 clean:
-	rm -rf *.out *.cm* *.o *~ _build *.log
+	rm -rf *.out *.cm* *.o *~ _build *.log parser.mli parser.ml lexer.ml
