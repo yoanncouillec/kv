@@ -70,3 +70,6 @@ A few of the things you can do with GitPoint:
 - `make run` to run two nodes
 - `make insert` to insert 100 documents
 - `make find` to find 100 documents
+
+## Examples
+
