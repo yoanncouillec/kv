@@ -70,9 +70,13 @@ A few of the things you can do with GitPoint:
 - `make` to compile sources
 - `make run` to run two super-fast nodes
 - `make insert` to insert 100 documents
-- `make biginsert` to insert 100,000 documents
 - `make find` to find 100 documents
-- `make bigfind` to find 100,000 documents
+- `make biginsert` to insert 10,000 documents
+- `make bigfind` to find 10,000 documents
+- `bin/kvc` to connect to the database
+  - `COUNT` to display number of documents
+  - `ÌNSERT 123 "qwe"` ot insert onedocument
+  - `SELECT 123` to find documents with a specific key
 
 ## Examples
 
