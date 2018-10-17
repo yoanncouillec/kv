@@ -1,8 +1,7 @@
 <h1 align="center"> KayVvi </h1> <br>
 <p align="center">
   <a href="https://gitpoint.co/">
-<blockquote class="imgur-embed-pub" lang="en" data-id="bqcbrHR"><a href="//imgur.com/bqcbrHR">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
-    <img alt="GitPoint" title="GitPoint" src="https://imgur.com/bqcbrHR" width="450">
+    <img alt="GitPoint" title="GitPoint" src="https://i.imgur.com/bqcbrHR.png" width="450">
   </a>
 </p>
 
