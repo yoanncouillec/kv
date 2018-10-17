@@ -21,6 +21,7 @@ Super-fast distributed NoSQL database
 - [Introduction](#introduction)
 - [Features](#features)
 - [Build Process](#build-process)
+- [Examples](#examples)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
