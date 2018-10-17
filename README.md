@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  GitHub in your pocket. Built with React Native.
+Super-fast distributed database
 </p>
 
 <p align="center">
