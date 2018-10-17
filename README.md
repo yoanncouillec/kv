@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-Super-fast distributed nosql database
+Super-fast distributed NoSQL database
 </p>
 
 <p align="center">
