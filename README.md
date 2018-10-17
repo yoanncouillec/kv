@@ -68,9 +68,11 @@ A few of the things you can do with GitPoint:
 ## Build Process
 
 - `make` to compile sources
-- `make run` to run two nodes
+- `make run` to run two super-fast nodes
 - `make insert` to insert 100 documents
+- `make biginsert` to insert 100,000 documents
 - `make find` to find 100 documents
+- `make bigfind` to find 100,000 documents
 
 ## Examples
 
