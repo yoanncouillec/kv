@@ -20,10 +20,7 @@ Super-fast distributed NoSQL database
 
 - [Introduction](#introduction)
 - [Features](#features)
-- [Feedback](#feedback)
-- [Contributors](#contributors)
 - [Build Process](#build-process)
-- [Backers](#backers-)
 - [Sponsors](#sponsors-)
 - [Acknowledgments](#acknowledgments)
 
@@ -38,9 +35,9 @@ Super-fast distributed NoSQL database
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)](http://commitizen.github.io/cz-cli/)
 [![Gitter chat](https://img.shields.io/badge/chat-on_gitter-008080.svg?style=flat-square)](https://gitter.im/git-point)
 
-View repository and user information, control your notifications and even manage your issues and pull requests. Built with React Native, GitPoint is one of the most feature-rich unofficial GitHub clients that is 100% free.
+Distribute your data over a giant distributed key-value store. Access your data through a command-line client, a driver or a REST API.
 
-**Available for both iOS and Android.**
+**Visualize your data state in real-time**
 
 <p align="center">
   <img src = "http://i.imgur.com/HowF6aM.png" width=350>
