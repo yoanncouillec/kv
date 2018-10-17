@@ -10,7 +10,7 @@ Super-fast distributed NoSQL database
 
 <p align="center">
   <a href="https://itunes.apple.com/us/app/gitpoint/id1251245162?mt=8">
-    <img alt="Try it" title="Try KayV" src="https://i.imgur.com/iMq5aIx.png" width="140">
+    <img alt="Try it" title="Try KayV" src="https://i.imgur.com/74kzVes.png" height="30">
   </a>
 </p>
 
