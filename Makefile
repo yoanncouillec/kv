@@ -1,63 +1,63 @@
 PACKAGES=unix,yojson
 
-all: kvc.out kvd.out kvr.out test.out test_find.out
+all: bin/kvc.out bin/kvd.out bin/kvr.out bin/test.out bin/test_find.out
 
-kvc.out: sql.cmx parser.cmx lexer.cmx log.cmx table.cmx service.cmx conf.cmx kvc.cmx
+bin/kvc.out: lib/sql.cmx lib/parser.cmx lib/lexer.cmx lib/log.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvc.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^	
 
-kvd.out: log.cmx table.cmx service.cmx conf.cmx kvd.cmx
+bin/kvd.out: lib/log.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvd.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^	
 
-kvr.out: log.cmx table.cmx service.cmx conf.cmx kvr.cmx
+bin/kvr.out: lib/log.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvr.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^	
 
-test.out: log.cmx table.cmx service.cmx test.cmx
+bin/test.out: lib/log.cmx lib/table.cmx lib/service.cmx lib/test.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^
 
-test_find.out: log.cmx table.cmx service.cmx test_find.cmx
+bin/test_find.out: lib/log.cmx lib/table.cmx lib/service.cmx lib/test_find.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^
 
-lexer.cmx: lexer.ml
+lib/lexer.cmx: src/lexer.ml
 
-parse.cmx: parser.ml
+lib/parse.cmx: src/parser.ml
 
-parser.ml: parser.mly parser.cmi
+src/parser.ml: src/parser.mly lib/parser.cmi
 	ocamlyacc $<
 
-parser.mli: parser.mly
+src/parser.mli: src/parser.mly
 	ocamlyacc $^
 
-lexer.ml: lexer.mll
-	ocamllex $^
+src/lexer.ml: src/lexer.mll
+	ocamllex $^ -o $@
 
-%.cmx:%.ml
-	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES)
+lib/%.cmx:src/%.ml
+	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES) -I lib
 
-%.cmi: %.mli
-	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES)
+lib/%.cmi: src/%.mli
+	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES) -I lib
 
 run:
-	./kvd.out --id kvd1 &
-	./kvd.out --id kvd2 &
-	./kvr.out &
+	./bin/kvd.out --id kvd1 &
+	./bin/kvd.out --id kvd2 &
+	./bin/kvr.out &
 
 kill:
 	killall kvd.out kvr.out
 
 insert:
-	./test.out
+	./bin/test.out
 
 biginsert:
-	./test.out --number 10000
+	./bin/test.out --number 10000
 
 verybiginsert:
-	./test.out --number 1000000
+	./bin/test.out --number 1000000
 
 find:
-	./test_find.out
+	./bin/test_find.out
 
 bigfind:
-	./test_find.out --number 10000
+	./bin/test_find.out --number 10000
 
 clean:
-	rm -rf *.out *.cm* *.o *~ _build *.log parser.mli parser.ml lexer.ml
+	rm -rf bin/*.out lib/*.cm* lib/*.o *~ _build *.log parser.mli parser.ml lexer.ml

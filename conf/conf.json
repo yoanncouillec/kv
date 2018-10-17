@@ -6,7 +6,7 @@
 	"min": 0,
 	"max": 1000,
 	"size": 100,
-	"logfile": "kvd1.log"
+	"logfile": "log/kvd1.log"
     },
     {
 	"id": "kvd2",
@@ -15,7 +15,7 @@
 	"min": 1000,
 	"max": 2000,
 	"size": 100,
-	"logfile": "kvd2.log"
+	"logfile": "log/kvd2.log"
     }
 ],
  "kvr":[
@@ -23,14 +23,14 @@
 	 "id": "kvr",
 	 "hostname": "127.0.0.1",
 	 "port": 26100,
-	 "logfile": "kvr.log"
+	 "logfile": "log/kvr.log"
      }
  ],
  "kvc":[
      {
 	 "id": "kvc",
 	 "kvr_id": "kvr",
-	 "logfile": "kvc.log"
+	 "logfile": "log/kvc.log"
      }
  ]
 }

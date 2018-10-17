@@ -34,7 +34,7 @@ let main =
   let min = ref 0 in
   let max = ref 2000 in
   let size = ref 1024 in
-  let logfile = ref "test_insert.log" in
+  let logfile = ref "log/test_insert.log" in
   let options =
     [
       ("--size", Arg.Set_int size, "Size of each document");
