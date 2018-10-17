@@ -1,7 +1,7 @@
-<h1 align="center"> KiVi </h1> <br>
+<h1 align="center"> KayVvi </h1> <br>
 <p align="center">
   <a href="https://gitpoint.co/">
-    <img alt="GitPoint" title="GitPoint" src="http://i.imgur.com/VShxJHs.png" width="450">
+    <img alt="GitPoint" title="GitPoint" src="https://imgur.com/bqcbrHR" width="450">
   </a>
 </p>
 
