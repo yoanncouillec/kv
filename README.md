@@ -1,4 +1,3 @@
-<h1 align="center"> KayV </h1> <br>
 <p align="center">
   <a href="https://gitpoint.co/">
     <img alt="GitPoint" title="GitPoint" src="https://i.imgur.com/bqcbrHR.png" width="200">
