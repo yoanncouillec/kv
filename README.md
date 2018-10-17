@@ -35,7 +35,8 @@ Super-fast distributed NoSQL database
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)](http://commitizen.github.io/cz-cli/)
 [![Gitter chat](https://img.shields.io/badge/chat-on_gitter-008080.svg?style=flat-square)](https://gitter.im/git-point)
 
-Distribute your data over a giant distributed key-value store. Access your data through a command-line client, a driver or a REST API.
+- Distribute your data over a giant distributed key-value store. 
+- Access your data through a command-line client, a driver or an api.
 
 **Visualize your data state in real-time**
 
