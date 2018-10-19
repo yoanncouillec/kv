@@ -60,4 +60,4 @@ bigfind:
 	./bin/test_find --number 10000
 
 clean:
-	rm -rf bin/* lib/*.cm* lib/*.o *~ _build *.log src/parser.mli src/parser.ml src/lexer.ml
+	rm -rf bin/* lib/*.cm* lib/*.o *~ _build *.log src/parser.mli src/parser.ml src/lexer.ml pid/* log/*

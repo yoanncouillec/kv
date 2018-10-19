@@ -2,6 +2,8 @@
 *.cm*
 *.o
 *.log
+pid
+log
 *~
 _build
 *.log
