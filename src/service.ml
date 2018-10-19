@@ -6,6 +6,7 @@ type message =
   | Read of index
   | Count
   | Drop
+  | Stop
 
 let rec string_of_value n v = 
   if String.length v > n then
@@ -18,6 +19,7 @@ let string_of_message = function
   | Read (k) -> "Read("^(string_of_int k)^")"
   | Count -> "Count"
   | Drop -> "Drop"
+  | Stop -> "Stop"
 
 let create_server port = 
   Log.info ("Create server");

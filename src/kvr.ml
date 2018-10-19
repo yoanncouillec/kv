@@ -89,6 +89,19 @@ let treat kvds msg =
            | _ -> failwith "expected count response")
          0 kvds in
      Table.Count total
+  | Service.Stop ->
+     let total = 
+       List.fold_left 
+         (fun a kvd ->
+           Service.send kvd.outc (Service.Stop) ;
+           match Service.receive kvd.inc with
+           | Table.Stopped n ->
+              Log.info "kvd stopped" ;
+              a + n
+           | _ -> failwith "expected stopped response")
+         0 kvds in
+     Table.Stopped (total)
+     
 
 let rec receive kvds client_inc client_outc =
   Log.nil ("kvr receive") ;
@@ -97,13 +110,18 @@ let rec receive kvds client_inc client_outc =
   Log.nil ("kvr receive got response") ;
   Log.nil (Table.string_of_response response);
   Service.send client_outc response ;
-  receive kvds client_inc client_outc
+  match response with
+  | Table.Stopped n ->
+     Log.info (Table.string_of_response response)
+  | _ ->
+     receive kvds client_inc client_outc
 
 let rec accept server kvds = 
   Log.info ("kvr accept") ;
   let client_inc, client_outc = Service.accept_client server in
   try
     receive kvds client_inc client_outc ;
+    Unix.close server
   with End_of_file -> accept server kvds
 
 let start logfile port kvds_jsconf = 

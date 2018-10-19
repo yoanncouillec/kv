@@ -20,17 +20,24 @@ let treat table = function
      Table.count table
   | Service.Drop ->
      Table.drop table
+  | Service.Stop ->
+     Table.Stopped (1)
                
 let rec receive table client_inc client_outc =
   let msg = Marshal.from_channel client_inc in
-  Service.send client_outc (treat table msg) ; 
-  (*Table.show table ;*)
-  receive table client_inc client_outc
+  let response = treat table msg in
+  Service.send client_outc response ;
+  match response with
+  | Table.Stopped n -> 
+     Log.info (Table.string_of_response response)
+  | _ ->
+     receive table client_inc client_outc
           
 let rec accept server table = 
   let client_inc, client_outc = Service.accept_client server in
   try
-    receive table client_inc client_outc 
+    receive table client_inc client_outc ;
+    Unix.close server
   with End_of_file -> 
     accept server table
 

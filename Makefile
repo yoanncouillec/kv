@@ -41,6 +41,9 @@ run:
 	./bin/kvd --id kvd2
 	./bin/kvr
 
+client:
+	./bin/kvc
+
 kill:
 	killall kvd kvr
 

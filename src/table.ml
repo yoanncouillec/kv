@@ -21,6 +21,7 @@ type response =
   | NotFound of int
   | Fail of string
   | Count of int
+  | Stopped of int
 
 let string_of_response = function
   | Inserted b -> "Inserted("^(string_of_int b)^")"
@@ -29,6 +30,7 @@ let string_of_response = function
   | NotFound k -> "NotFound("^(string_of_int k)^")"
   | Fail msg -> "Fail:"^msg
   | Count n -> "Count("^(string_of_int n)^")"
+  | Stopped n -> "Stopped("^(string_of_int n)^")"
 
 let add table key value = 
   if key < table.min || table.max <= key then
