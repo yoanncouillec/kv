@@ -106,6 +106,11 @@ let rec accept server kvds =
     receive kvds client_inc client_outc ;
   with End_of_file -> accept server kvds
 
+let start logfile port kvds_jsconf = 
+  Log.init (open_out logfile);
+  let server = Service.create_server port in
+  accept server (kvds kvds_jsconf)
+
 let main = 
   let id = ref "kvr" in
   let conffile = ref "conf/conf.json" in
@@ -119,6 +124,7 @@ let main =
   let jsconf = Conf.find_conf_by_id !id (all_conf |> member "kvr" |> to_list) in
   let kvds_jsconf = all_conf |> member "kvd" |> to_list in
   let conf = Conf.make_kvr_conf jsconf in
-  Log.init (open_out conf.logfile);
-  let server = Service.create_server conf.port in
-  accept server (kvds kvds_jsconf)
+  Fork.start
+    (fun () -> start conf.logfile conf.port kvds_jsconf)
+    conf.pidfile
+    conf.fork

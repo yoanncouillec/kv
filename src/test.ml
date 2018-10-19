@@ -52,6 +52,8 @@ let main =
   let fork = ref false in
   let options =
     [
+      ("--logfile", Arg.String (fun s -> logcout := open_out s), "Logfile");
+      ("--pidfile", Arg.Set_string pidfile, "PID file");
       ("--fork", Arg.Set fork, "Launch as daemon");
       ("--size", Arg.Set_int size, "Size of each document");
       ("--number", Arg.Set_int number, "Number of document to insert");
@@ -59,8 +61,6 @@ let main =
       ("--max", Arg.Set_int max, "max");
       ("--host", Arg.Set_string hostname, "Hostname of the server");
       ("--port", Arg.Set_int port, "Port of the server");
-      ("--logfile", Arg.String (fun s -> logcout := open_out s), "Logfile");
-      ("--pidfile", Arg.Set_string pidfile, "PID file");
     ] in
   Arg.parse options print_endline "Chat client:" ;
   Fork.start 

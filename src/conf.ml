@@ -8,6 +8,8 @@ type kvd_conf = {
     max : int;
     size : int;
     logfile : string;
+    pidfile: string;
+    fork: bool;
   }
 
 type kvr_conf = {
@@ -15,6 +17,8 @@ type kvr_conf = {
     hostname : string;
     port : int;
     logfile : string;
+    pidfile: string;
+    fork: bool;
   }
 
 type kvc_conf = {
@@ -35,6 +39,8 @@ let make_kvd_conf jsconf =
     max = jsconf |> member "max" |> to_int;
     size = jsconf |> member "size" |> to_int;
     logfile = jsconf |> member "logfile" |> to_string;
+    pidfile = jsconf |> member "pidfile" |> to_string;
+    fork = jsconf |> member "fork" |> to_bool;
   }
 
 let make_kvr_conf jsconf = 
@@ -43,6 +49,8 @@ let make_kvr_conf jsconf =
     hostname = jsconf |> member "hostname" |> to_string;
     port = jsconf |> member "port" |> to_int;
     logfile = jsconf |> member "logfile" |> to_string;
+    pidfile = jsconf |> member "pidfile" |> to_string;
+    fork = jsconf |> member "fork" |> to_bool;
   }
 
 let make_kvc_conf jsconf = 

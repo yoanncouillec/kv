@@ -33,6 +33,13 @@ let rec accept server table =
     receive table client_inc client_outc 
   with End_of_file -> 
     accept server table
+
+let start logfile size min max port= 
+  Log.init (open_out logfile);
+  Log.info ("Load configuration");
+  let table = Table.create size min max in
+  let server = Service.create_server port in
+  accept server table
            
 let main = 
   let id = ref "kvd" in
@@ -46,9 +53,7 @@ let main =
   let all_conf = Yojson.Basic.from_channel (open_in !conffile) in
   let jsconf = Conf.find_conf_by_id !id (all_conf |> member "kvd" |> to_list) in
   let conf = Conf.make_kvd_conf jsconf in
-  Log.init (open_out conf.logfile);
-  Log.info ("Load configuration");
-  let table = Table.create conf.size conf.min conf.max in
-  let server = Service.create_server conf.port in
-  accept server table
-  
+  Fork.start
+    (fun () -> start conf.logfile conf.size conf.min conf.max conf.port)
+    conf.pidfile
+    conf.fork

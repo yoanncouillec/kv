@@ -6,7 +6,9 @@
 	"min": 0,
 	"max": 1000,
 	"size": 100,
-	"logfile": "log/kvd1.log"
+	"logfile": "log/kvd1.log",
+	"pidfile": "pid/kvd1.pid",
+	"fork": true
     },
     {
 	"id": "kvd2",
@@ -15,7 +17,9 @@
 	"min": 1000,
 	"max": 2000,
 	"size": 100,
-	"logfile": "log/kvd2.log"
+	"logfile": "log/kvd2.log",
+	"pidfile": "pid/kvd2.pid",
+	"fork": true
     }
 ],
  "kvr":[
@@ -23,7 +27,9 @@
 	 "id": "kvr",
 	 "hostname": "127.0.0.1",
 	 "port": 26100,
-	 "logfile": "log/kvr.log"
+	 "logfile": "log/kvr.log",
+	 "pidfile": "pid/kvr.pid",
+	 "fork": true
      }
  ],
  "kvc":[

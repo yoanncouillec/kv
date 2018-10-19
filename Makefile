@@ -5,10 +5,10 @@ all: bin/kvc bin/kvd bin/kvr bin/test bin/test_find
 bin/kvc: lib/sql.cmx lib/parser.cmx lib/lexer.cmx lib/log.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvc.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^	
 
-bin/kvd: lib/log.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvd.cmx
+bin/kvd: lib/log.cmx lib/fork.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvd.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^	
 
-bin/kvr: lib/log.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvr.cmx
+bin/kvr: lib/log.cmx lib/fork.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvr.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^	
 
 bin/test: lib/log.cmx lib/fork.cmx lib/table.cmx lib/service.cmx lib/test.cmx
@@ -37,9 +37,9 @@ lib/%.cmi: src/%.mli
 	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES) -I lib
 
 run:
-	./bin/kvd --id kvd1 &
-	./bin/kvd --id kvd2 &
-	./bin/kvr &
+	./bin/kvd --id kvd1
+	./bin/kvd --id kvd2
+	./bin/kvr
 
 kill:
 	killall kvd kvr
