@@ -1,20 +1,20 @@
 PACKAGES=unix,yojson
 
-all: bin/kvc.out bin/kvd.out bin/kvr.out bin/test.out bin/test_find.out
+all: bin/kvc bin/kvd bin/kvr bin/test bin/test_find
 
-bin/kvc.out: lib/sql.cmx lib/parser.cmx lib/lexer.cmx lib/log.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvc.cmx
+bin/kvc: lib/sql.cmx lib/parser.cmx lib/lexer.cmx lib/log.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvc.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^	
 
-bin/kvd.out: lib/log.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvd.cmx
+bin/kvd: lib/log.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvd.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^	
 
-bin/kvr.out: lib/log.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvr.cmx
+bin/kvr: lib/log.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvr.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^	
 
-bin/test.out: lib/log.cmx lib/table.cmx lib/service.cmx lib/test.cmx
+bin/test: lib/log.cmx lib/fork.cmx lib/table.cmx lib/service.cmx lib/test.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^
 
-bin/test_find.out: lib/log.cmx lib/table.cmx lib/service.cmx lib/test_find.cmx
+bin/test_find: lib/log.cmx lib/table.cmx lib/service.cmx lib/test_find.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^
 
 lib/lexer.cmx: src/lexer.ml
@@ -37,27 +37,27 @@ lib/%.cmi: src/%.mli
 	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES) -I lib
 
 run:
-	./bin/kvd.out --id kvd1 &
-	./bin/kvd.out --id kvd2 &
-	./bin/kvr.out &
+	./bin/kvd --id kvd1 &
+	./bin/kvd --id kvd2 &
+	./bin/kvr &
 
 kill:
-	killall kvd.out kvr.out
+	killall kvd kvr
 
 insert:
-	./bin/test.out
+	./bin/test
 
 biginsert:
-	./bin/test.out --number 10000
+	./bin/test --number 10000 --logfile log/test_biginsert.log
 
 verybiginsert:
-	./bin/test.out --number 1000000
+	./bin/test --number 1000000 --fork
 
 find:
-	./bin/test_find.out
+	./bin/test_find
 
 bigfind:
-	./bin/test_find.out --number 10000
+	./bin/test_find --number 10000
 
 clean:
-	rm -rf bin/*.out lib/*.cm* lib/*.o *~ _build *.log parser.mli parser.ml lexer.ml
+	rm -rf bin/* lib/*.cm* lib/*.o *~ _build *.log src/parser.mli src/parser.ml src/lexer.ml
