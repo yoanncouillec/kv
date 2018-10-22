@@ -139,9 +139,9 @@ let main =
     ] in
   Arg.parse options (fun _ -> ()) "Options:";
   let all_conf = Yojson.Basic.from_file !conffile in
-  let jsconf = Conf.find_conf_by_id !id (all_conf |> member "kvr" |> to_list) in
+  let jsconf = Kvconf.find_conf_by_id !id (all_conf |> member "kvr" |> to_list) in
   let kvds_jsconf = all_conf |> member "kvd" |> to_list in
-  let conf = Conf.make_kvr_conf jsconf in
+  let conf = Kvconf.make_kvr_conf jsconf in
   Fork.start
     (fun () -> start conf.logfile conf.port kvds_jsconf)
     conf.pidfile

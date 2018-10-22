@@ -58,8 +58,8 @@ let main =
     ] in
   Arg.parse options (fun _ -> ()) "Options:";
   let all_conf = Yojson.Basic.from_channel (open_in !conffile) in
-  let jsconf = Conf.find_conf_by_id !id (all_conf |> member "kvd" |> to_list) in
-  let conf = Conf.make_kvd_conf jsconf in
+  let jsconf = Kvconf.find_conf_by_id !id (all_conf |> member "kvd" |> to_list) in
+  let conf = Kvconf.make_kvd_conf jsconf in
   Fork.start
     (fun () -> start conf.logfile conf.size conf.min conf.max conf.port)
     conf.pidfile

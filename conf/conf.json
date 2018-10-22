@@ -38,5 +38,13 @@
 	 "kvr_id": "kvr",
 	 "logfile": "log/kvc.log"
      }
+ ],
+ "kvp":[
+     {
+	 "id": "kvp",
+	 "port": 8765,
+	 "kvr_id": "kvr",
+	 "logfile": "log/kvp.log"
+     }
  ]
 }

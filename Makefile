@@ -1,21 +1,25 @@
 PACKAGES=unix,yojson
+KVP_PACKAGES=unix,yojson,cohttp-lwt-unix
 
-all: bin/kvc bin/kvd bin/kvr bin/test bin/test_find
+all: bin/kvc bin/kvp bin/kvd bin/kvr bin/test bin/test_find
 
-bin/kvc: lib/sql.cmx lib/parser.cmx lib/lexer.cmx lib/log.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvc.cmx
-	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^	
+bin/kvc: lib/sql.cmx lib/parser.cmx lib/lexer.cmx lib/log.cmx lib/table.cmx lib/service.cmx lib/kvconf.cmx lib/kvc.cmx
+	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^ 
 
-bin/kvd: lib/log.cmx lib/fork.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvd.cmx
-	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^	
+bin/kvp: lib/sql.cmx lib/parser.cmx lib/lexer.cmx lib/log.cmx lib/table.cmx lib/service.cmx lib/kvconf.cmx lib/kvp.cmx
+	ocamlfind ocamlopt -o $@ -package $(KVP_PACKAGES) -linkpkg $^ -thread
 
-bin/kvr: lib/log.cmx lib/fork.cmx lib/table.cmx lib/service.cmx lib/conf.cmx lib/kvr.cmx
-	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^	
+bin/kvd: lib/log.cmx lib/fork.cmx lib/table.cmx lib/service.cmx lib/kvconf.cmx lib/kvd.cmx
+	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^ 
+
+bin/kvr: lib/log.cmx lib/fork.cmx lib/table.cmx lib/service.cmx lib/kvconf.cmx lib/kvr.cmx
+	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^ 
 
 bin/test: lib/log.cmx lib/fork.cmx lib/table.cmx lib/service.cmx lib/test.cmx
-	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^
+	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^ 
 
 bin/test_find: lib/log.cmx lib/table.cmx lib/service.cmx lib/test_find.cmx
-	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^
+	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^ 
 
 lib/lexer.cmx: src/lexer.ml
 
@@ -30,6 +34,8 @@ src/parser.mli: src/parser.mly
 src/lexer.ml: src/lexer.mll
 	ocamllex $^ -o $@
 
+lib/kvp.cmx:src/kvp.ml
+	ocamlfind ocamlopt -c $^ -o $@ -package $(KVP_PACKAGES) -I lib -thread
 lib/%.cmx:src/%.ml
 	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES) -I lib
 

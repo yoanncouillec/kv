@@ -38,10 +38,10 @@ let main =
     ] in
   Arg.parse options (fun _ -> ()) "Options:";
   let all_conf = Yojson.Basic.from_channel (open_in !conffile) in
-  let kvc_jsconf = Conf.find_conf_by_id !id (all_conf |> member "kvc" |> to_list) in
-  let kvc = Conf.make_kvc_conf kvc_jsconf in
-  let kvr_jsconf = Conf.find_conf_by_id kvc.kvr_id (all_conf |> member "kvr" |> to_list) in
-  let kvr = Conf.make_kvr_conf kvr_jsconf in
+  let kvc_jsconf = Kvconf.find_conf_by_id !id (all_conf |> member "kvc" |> to_list) in
+  let kvc = Kvconf.make_kvc_conf kvc_jsconf in
+  let kvr_jsconf = Kvconf.find_conf_by_id kvc.kvr_id (all_conf |> member "kvr" |> to_list) in
+  let kvr = Kvconf.make_kvr_conf kvr_jsconf in
   Log.init (open_out kvc.logfile);
   Log.info ("Load configuration");
   let inc, outc = Service.connect_to_server kvr.hostname kvr.port in 
