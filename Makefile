@@ -47,6 +47,9 @@ run:
 	./bin/kvd --id kvd2
 	./bin/kvr
 
+api:
+	./bin/kvp
+
 client:
 	./bin/kvc
 
@@ -67,6 +70,11 @@ find:
 
 bigfind:
 	./bin/test_find --number 10000
+
+test_api:
+	curl --header "Content-Type: application/json" --request POST --data '{"command":"COUNT"}' "http://localhost:8765"
+	curl --header "Content-Type: application/json" --request POST --data '{"command":"SELECT 14"}' "http://localhost:8765"
+	#curl --header "Content-Type: application/json" --request POST --data '{"command":"INSERT 14 \"asas\""}' "http://localhost:8765"
 
 clean:
 	rm -rf bin/* lib/*.cm* lib/*.o *~ _build *.log src/parser.mli src/parser.ml src/lexer.ml pid/* log/*

@@ -1,7 +1,7 @@
 - [x] kvc
-- [ ] fork
-  - [ ] kvd
-  - [ ] kvr  
+- [x] fork
+  - [x] kvd
+  - [x] kvr  
 - [ ] CRUD 
   - [x] Create
   - [x] Read
@@ -28,4 +28,8 @@
 
 - [ ] directories
 - [ ] API
-  - Should expose REST API call while calling corresponding functions
+  - [x] json command
+    - [ ] FIX: received JSON contains unecessary extra double quotes 
+      - Ex: "COUNT" instead of COUNT
+      - Ex: INSERT 14 "asas" (see Makefile, `make test_api`)
+  - [] Make API call from lispweb 

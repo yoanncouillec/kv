@@ -14,16 +14,18 @@ let expr_of_string s =
 let expr_of_filename filename = 
   expr_of_string (string_of_channel (open_in filename) "")
 
+let send_command inc outc line =
+  let expr = expr_of_string line in
+  Service.send outc expr ;
+  let response = Service.receive inc in
+  print_endline (Table.string_of_response response)
+
 let rec repl inc outc =
   try
     Log.info "Repl";
     print_string "> " ;
     let line = read_line () in
-    let expr = expr_of_string line in
-    (*print_endline (Sql.string_of_sqlexpr expr);*)
-    Service.send outc expr ;
-    let response = Service.receive inc in
-    print_endline (Table.string_of_response response) ;
+    send_command inc outc line;
     repl inc outc
   with
   | End_of_file -> print_endline "\nSee you!"
