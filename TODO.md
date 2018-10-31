@@ -13,6 +13,7 @@
   - [x] Count table
   - [x] Count for one index
   - [ ] Bulk
+- [] several indexes
 - [ ] Database admin.
   - [ ] Manage several tables 
   - [ ] Manage several database 
