@@ -1,4 +1,4 @@
-- [ ] multi-threaded clients
+- [x] multi-threaded clients
 - [x] kvc
 - [x] fork
   - [x] kvd
