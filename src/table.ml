@@ -34,7 +34,7 @@ let string_of_response = function
 
 let add table key value = 
   if key < table.min || table.max <= key then
-    failwith "Out of bounds"
+    Fail "Out of bounds"
   else
     let bucket_index = (key - table.min) / ((table.max - table.min) / table.size) in
     Hashtbl.add table.hashtbl bucket_index (key,value) ;
@@ -42,7 +42,7 @@ let add table key value =
 
 let get table key = 
   if key < table.min || table.max <= key then
-    failwith "Out of bounds"
+    Fail "Out of bounds"
   else
     let bucket_index = key / ((table.max - table.min) / table.size) in
     match (List.filter

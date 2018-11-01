@@ -60,13 +60,15 @@ let treat kvds msg =
            Table.Fail (msg))
   | Service.Read (k) ->
      Log.nil ("kvr treat read") ;
-     let kvd = List.hd 
-                 (List.filter
-                    (fun e -> e.min <= k && k < e.max)
-                    kvds)
-     in
-     Service.send kvd.outc (Service.Read (k));
-     Service.receive kvd.inc
+     (match List.filter
+              (fun e -> e.min <= k && k < e.max)
+              kvds 
+      with
+      | kvd::[] ->
+         Service.send kvd.outc (Service.Read (k));
+         Service.receive kvd.inc
+      | [] -> Fail "Out of bounds"
+      | _ -> Fail "Several KVDs")
   | Service.Count ->
      Log.nil ("kvr treat count") ;
      let total = 

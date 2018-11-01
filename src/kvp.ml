@@ -15,23 +15,39 @@ let expr_of_string s =
 let json_ex = to_string(`Assoc[("name",`String "name")])
 
 let send_command inc outc line =
-  let expr = expr_of_string line in
-  Service.send outc expr ;
-  let response = Service.receive inc in
-  Table.string_of_response response
+  try
+    let expr = expr_of_string line in
+    Service.send outc expr ;
+    let response = Service.receive inc in
+    Table.string_of_response response
+  with Parsing.Parse_error ->
+        "Parse Error"
 
 let server inc outc port =
   let callback _conn req body =
+    print_endline ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
     let uri = req |> Request.uri |> Uri.to_string in
+    print_endline (uri);
     let meth = req |> Request.meth |> Code.string_of_method in
+    print_endline (meth);
     let headers = req |> Request.headers |> Header.to_string in
-    body |> Cohttp_lwt.Body.to_string >>= 
-      (fun body -> 
-        let jsquery = Yojson.Basic.from_string body in
-        let command = jsquery |> member "command" |> Yojson.Basic.to_string in
-        let command = String.sub command 1 ((String.length command) - 2) in
-        let response = send_command inc outc command in
-        Server.respond_string ~status:`OK ~body:response ())
+    print_endline (headers);
+    if meth = "OPTIONS" then
+      (Server.respond_string 
+        ~headers:(Cohttp.Header.of_list [("Origin","http://localhost:8765");
+                                         ("Access-Control-Allow-Origin","*");
+                                         ("Access-Control-Allow-Methods","POST");
+                                         ("Access-Control-Allow-Headers","Content-Type")]) 
+        ~status:`OK ~body:"" ())
+    else
+      (body |> Cohttp_lwt.Body.to_string >>= 
+        (fun body -> 
+          print_endline(">>"^body^"<<");
+          let jsquery = Yojson.Basic.from_string body in
+          let command = jsquery |> member "command" |> Yojson.Basic.to_string in
+          let command = String.sub command 1 ((String.length command) - 2) in
+          let response = send_command inc outc command in
+          Server.respond_string ~headers:(Cohttp.Header.of_list [("Access-Control-Allow-Origin","*")]) ~status:`OK ~body:response ()))
   in
   Server.create ~mode:(`TCP (`Port port)) (Server.make ~callback ())
 
