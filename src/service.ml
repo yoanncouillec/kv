@@ -35,7 +35,8 @@ let accept_client socket =
   let client = Unix.accept socket in
   Log.info ("Client accepted");
   let channels = fst client in
-  (Unix.in_channel_of_descr channels, Unix.out_channel_of_descr channels)
+  let inc, outc = Unix.in_channel_of_descr channels, Unix.out_channel_of_descr channels in
+  (inc,outc)
 
 let connect_to_server hostname port = 
   Log.info ("Connect to server");

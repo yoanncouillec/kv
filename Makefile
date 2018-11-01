@@ -1,5 +1,5 @@
 PACKAGES=unix,yojson
-KVP_PACKAGES=unix,yojson,cohttp-lwt-unix
+KVP_PACKAGES=unix,yojson,cohttp-lwt-unix,str
 
 all: bin/kvc bin/kvp bin/kvd bin/kvr bin/test bin/test_find
 
@@ -13,7 +13,7 @@ bin/kvd: lib/log.cmx lib/fork.cmx lib/table.cmx lib/service.cmx lib/kvconf.cmx l
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^ 
 
 bin/kvr: lib/log.cmx lib/fork.cmx lib/table.cmx lib/service.cmx lib/kvconf.cmx lib/kvr.cmx
-	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^ 
+	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^  -thread
 
 bin/test: lib/log.cmx lib/fork.cmx lib/table.cmx lib/service.cmx lib/test.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^ 
@@ -36,8 +36,9 @@ src/lexer.ml: src/lexer.mll
 
 lib/kvp.cmx:src/kvp.ml
 	ocamlfind ocamlopt -c $^ -o $@ -package $(KVP_PACKAGES) -I lib -thread
+
 lib/%.cmx:src/%.ml
-	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES) -I lib
+	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES) -I lib -thread
 
 lib/%.cmi: src/%.mli
 	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES) -I lib

@@ -1,4 +1,5 @@
 open Yojson.Basic.Util
+open Thread
 
 type kvd = 
 {
@@ -120,11 +121,16 @@ let rec receive kvds client_inc client_outc =
 
 let rec accept server kvds = 
   Log.info ("kvr accept") ;
-  let client_inc, client_outc = Service.accept_client server in
-  try
-    receive kvds client_inc client_outc ;
-    Unix.close server
-  with End_of_file -> accept server kvds
+  let inc, outc = Service.accept_client server in
+  ignore
+    (Thread.create 
+       (function (client_inc, client_outc) ->
+                  try
+                    receive kvds client_inc client_outc ;
+                    Unix.close server
+                  with End_of_file -> ())
+       (inc,outc)) ;
+  accept server kvds
 
 let start logfile port kvds_jsconf = 
   Log.init (open_out logfile);

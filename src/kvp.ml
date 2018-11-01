@@ -21,7 +21,11 @@ let send_command inc outc line =
     let response = Service.receive inc in
     Table.string_of_response response
   with Parsing.Parse_error ->
+        print_endline "Parsing error";
         "Parse Error"
+     | Failure msg -> 
+        print_endline ("Failure: "^msg);
+        msg
 
 let server inc outc port =
   let callback _conn req body =
@@ -42,6 +46,7 @@ let server inc outc port =
     else
       (body |> Cohttp_lwt.Body.to_string >>= 
         (fun body -> 
+          (*let body = Str.global_replace (Str.regexp_string "\\\"") "\"" body in*)
           print_endline(">>"^body^"<<");
           let jsquery = Yojson.Basic.from_string body in
           let command = jsquery |> member "command" |> Yojson.Basic.to_string in

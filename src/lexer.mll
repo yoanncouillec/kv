@@ -12,6 +12,6 @@ rule token = parse
   | "COUNT" { COUNT }
   | "DROP" { DROP }
   | "STOP" { STOP }
-  | '\"' (('\\' _) | [^'\"'])* '\"' { ER_STRING (Lexing.lexeme lexbuf) }
+  | ('\''|'\"') (('\\' _) | [^'\''])* ('\''|'\"') { ER_STRING (Lexing.lexeme lexbuf) }
   | ['0'-'9']+ { ER_INT (int_of_string (Lexing.lexeme lexbuf)) }
 
