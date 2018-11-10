@@ -1,7 +1,9 @@
 PACKAGES=unix,yojson
 KVP_PACKAGES=unix,yojson,cohttp-lwt-unix,str
 
-all: bin/kvc bin/kvp bin/kvd bin/kvr bin/test bin/test_find
+bin: bin/kvc bin/kvp bin/kvd bin/kvr
+
+bin_test:  bin/test bin/test_find
 
 bin/kvc: lib/sql.cmx lib/parser.cmx lib/lexer.cmx lib/log.cmx lib/table.cmx lib/service.cmx lib/kvconf.cmx lib/kvc.cmx
 	ocamlfind ocamlopt -o $@ -package $(PACKAGES) -linkpkg $^ 
@@ -43,16 +45,25 @@ lib/%.cmx:src/%.ml
 lib/%.cmi: src/%.mli
 	ocamlfind ocamlopt -c $^ -o $@ -package $(PACKAGES) -I lib
 
-run:
-	./bin/kvd --id kvd1
-	./bin/kvd --id kvd2
-	./bin/kvr
+start:
+	kvd --id kvd1
+	kvd --id kvd2
+	kvr
+
+stop:
+	kill `cat /var/run/kv/*.pid`
 
 api:
 	./bin/kvp
 
 client:
 	./bin/kvc
+
+install:
+	./scripts/install.sh
+
+uninstall:
+	./scripts/uninstall.sh
 
 kill:
 	killall kvd kvr

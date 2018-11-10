@@ -58,7 +58,7 @@ let server inc outc port =
 
 let main =
   let id = ref "kvp" in
-  let conffile = ref "conf/conf.json" in
+  let conffile = ref "/etc/kv/conf.json" in
   let options =
     [
       ("--id", Arg.Set_string id, "id");

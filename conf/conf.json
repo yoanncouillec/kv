@@ -6,8 +6,8 @@
 	"min": 0,
 	"max": 1000,
 	"size": 100,
-	"logfile": "log/kvd1.log",
-	"pidfile": "pid/kvd1.pid",
+	"logfile": "/var/log/kv/kvd1.log",
+	"pidfile": "/var/run/kv/kvd1.pid",
 	"fork": true
     },
     {
@@ -17,8 +17,8 @@
 	"min": 1000,
 	"max": 2000,
 	"size": 100,
-	"logfile": "log/kvd2.log",
-	"pidfile": "pid/kvd2.pid",
+	"logfile": "/var/log/kv/kvd2.log",
+	"pidfile": "/var/run/kv/kvd2.pid",
 	"fork": true
     }
 ],
@@ -27,8 +27,8 @@
 	 "id": "kvr",
 	 "hostname": "127.0.0.1",
 	 "port": 26100,
-	 "logfile": "log/kvr.log",
-	 "pidfile": "pid/kvr.pid",
+	 "logfile": "/var/log/kv/kvr.log",
+	 "pidfile": "/var/run/kv/kvr.pid",
 	 "fork": true
      }
  ],
@@ -36,7 +36,7 @@
      {
 	 "id": "kvc",
 	 "kvr_id": "kvr",
-	 "logfile": "log/kvc.log"
+	 "logfile": "/var/log/kv/kvc.log"
      }
  ],
  "kvp":[
@@ -44,7 +44,7 @@
 	 "id": "kvp",
 	 "port": 8765,
 	 "kvr_id": "kvr",
-	 "logfile": "log/kvp.log"
+	 "logfile": "/var/log/kv/kvp.log"
      }
  ]
 }

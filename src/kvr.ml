@@ -139,7 +139,7 @@ let start logfile port kvds_jsconf =
 
 let main = 
   let id = ref "kvr" in
-  let conffile = ref "conf/conf.json" in
+  let conffile = ref "/etc/kv/conf.json" in
   let options =
     [
       ("--id", Arg.Set_string id, "id");

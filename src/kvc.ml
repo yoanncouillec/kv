@@ -32,7 +32,7 @@ let rec repl inc outc =
 
 let main =
   let id = ref "kvc" in
-  let conffile = ref "conf/conf.json" in
+  let conffile = ref "/etc/kv/conf.json" in
   let options =
     [
       ("--id", Arg.Set_string id, "id");
