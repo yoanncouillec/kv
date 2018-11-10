@@ -5,8 +5,12 @@
     <key>Label</key>
     <string>com.kv</string>
     <key>Program</key>
-    <string>/usr/local/bin/kv start</string>
+    <string>/usr/local/bin/kv</string>
     <key>RunAtLoad</key>
     <true/>
+    <key>StandardOutPath</key>
+    <string>/tmp/kv.stdout</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/kv.stderr</string>
   </dict>
 </plist>

@@ -64,3 +64,7 @@ fi
 rm $BINDIR/kvd
 rm $BINDIR/kvr
 rm $BINDIR/kv
+rm $BINDIR/kvc
+rm $BINDIR/kvp
+launchctl unload -w $HOME/Library/LaunchAgents/com.kv.plist
+rm $HOME/Library/LaunchAgents/com.kv.plist

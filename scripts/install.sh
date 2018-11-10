@@ -104,3 +104,19 @@ chown $USERNAME:$GROUPNAME $BINDIR/kvr
 
 cp scripts/kv.sh $BINDIR/kv
 chown $USERNAME:$GROUPNAME $BINDIR/kv
+
+### COPY KVC SCRIPT
+
+cp bin/kvc $BINDIR
+chown $USERNAME:$GROUPNAME $BINDIR/kvc
+
+### COPY KVP SCRIPT
+
+cp bin/kvp $BINDIR
+chown $USERNAME:$GROUPNAME $BINDIR/kvp
+
+### COPY SERVICE
+
+cp scripts/com.kv.plist $HOME/Library/LaunchAgents/
+launchctl load -w $HOME/Library/LaunchAgents/com.kv.plist
+launchctl start -w $HOME/Library/LaunchAgents/com.kv.plist
