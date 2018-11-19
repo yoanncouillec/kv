@@ -1,10 +1,4 @@
 <p align="center">
-  <a href="https://gitpoint.co/">
-    <img alt="GitPoint" title="GitPoint" src="https://i.imgur.com/bqcbrHR.png" width="200">
-  </a>
-</p>
-
-<p align="center">
 Super-fast distributed NoSQL database
 </p>
 
